@@ -8,8 +8,67 @@ export default new Vuex.Store({
     recognizedStudents: [],
     disciplines: [],
     groups: [],
+    token: "",
   },
   actions: {
+    async signIn(ctx, { email, password }) {
+      await fetch(
+        `${process.env.VUE_APP_CORS_URL}${process.env.VUE_APP_BASE_URL}/api/auth/signIn`,
+        {
+          method: "POST",
+          body: JSON.stringify({ email, password }),
+          headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
+          },
+        }
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          ctx.commit("setToken", result.token);
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.error("Oh, we get  an error response (5xx, 4xx)");
+          } else if (err.request) {
+            console.error(
+              "Some troubles with a network, pls check your connection"
+            );
+          } else {
+            console.log(err);
+            console.error("Something went wrong, pls refresh the page");
+          }
+        });
+    },
+    async signUp(ctx, { email, password }) {
+      await fetch(
+        `${process.env.VUE_APP_CORS_URL}${process.env.VUE_APP_BASE_URL}/api/auth/signUp`,
+        {
+          method: "POST",
+          body: JSON.stringify({ email, password }),
+          headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
+          },
+        }
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          ctx.commit("setToken", result);
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.error("Oh, we get an error response (5xx, 4xx)");
+          } else if (err.request) {
+            console.error(
+              "Some troubles with a network, pls check your connection"
+            );
+          } else {
+            console.log(err);
+            console.error("Something went wrong, pls refresh the page");
+          }
+        });
+    },
     async sendGroupData(ctx, { groups, photos, discipline }) {
       const formData = new FormData();
 
@@ -117,6 +176,9 @@ export default new Vuex.Store({
     },
     updateGroups(state, groups) {
       state.groups = groups;
+    },
+    setToken(state, token) {
+      state.token = token;
     },
   },
 });

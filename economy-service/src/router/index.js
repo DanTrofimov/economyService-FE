@@ -1,14 +1,19 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Auth from "../views/Auth.vue";
+import Login from "../views/Login.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    name: "Auth",
-    component: Auth,
+    name: "",
+    component: Login,
+  },
+  {
+    path: "/sign-up",
+    name: "",
+    component: () => import("../views/SignUp.vue"),
   },
   {
     path: "/add-group",
