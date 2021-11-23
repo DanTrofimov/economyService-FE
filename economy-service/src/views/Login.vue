@@ -6,6 +6,9 @@
       <div v-if="isError" class="error-wrapper">
         <p class="error">fill email & password</p>
       </div>
+      <div v-if="isLoggedError" class="error-wrapper">
+        <p class="error">unknown user</p>
+      </div>
       <TextInput
         name="email"
         type="email"
@@ -43,6 +46,7 @@ export default {
       email: "",
       password: "",
       isError: false,
+      isLoggedError: false,
     };
   },
   computed: {
@@ -54,7 +58,12 @@ export default {
       if (this.email && this.password) {
         this.isError = false;
         await this.signIn({ email: this.email, password: this.password });
-        if (this.token) await this.$router.push("/add-group");
+        if (this.token) {
+          await this.$router.push("/add-group");
+          this.isLoggedError = false;
+        } else {
+          this.isLoggedError = true;
+        }
       } else {
         this.isError = true;
       }
