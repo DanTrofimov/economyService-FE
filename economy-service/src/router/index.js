@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Login from "../views/Login.vue";
+import store from "../store";
 
 Vue.use(VueRouter);
 
@@ -39,6 +40,25 @@ const routes = [
 
 const router = new VueRouter({
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.fullPath === "/add-group") {
+    if (!store.state.token) {
+      next("/");
+    }
+  }
+  if (to.fullPath === "/add-discipline") {
+    if (!store.state.token) {
+      next("/");
+    }
+  }
+  if (to.fullPath === "/add-m8") {
+    if (!store.state.token) {
+      next("/");
+    }
+  }
+  next();
 });
 
 export default router;
